@@ -31,17 +31,19 @@ The membership value μ(x) for an input x is calculated as:
 μ(x) = max(min((x - a) / (b - a), (c - x) / (c - b)), 0)
 
 
-Our system defines four fuzzy sets:
-- **Low**: (0, 40, 52)
-- **Medium**: (30, 50, 70)
-- **Average**: (60, 75, 90)
-- **High**: (85, 100, 100)
+Our system defines five fuzzy sets:
+- **Very Low**: (0,39)
+- **Low**: (38, 45, 52)
+- **Medium**: (49, 58, 66)
+- **Average**: (64, 73, 81)
+- **High**: (77,100)
 
 ### 3.2 Fuzzification
 The fuzzification process converts the crisp input (student's mark) into fuzzy values for each set. For example, a mark of 65 might have the following fuzzy values:
+- **Very Low**: 0
 - **Low**: 0
-- **Medium**: 0.25
-- **Average**: 0.33
+- **Medium**: 0.083
+- **Average**: 0.11
 - **High**: 0
 
 ### 3.3 Fuzzy Rules
