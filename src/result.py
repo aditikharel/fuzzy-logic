@@ -114,26 +114,22 @@ def fuzzy_values(percentage):
 fuzzy_df = pd.DataFrame([fuzzy_values(x) for x in df['Percentage']], columns=['Very Low', 'Low', 'Medium', 'Average', 'High'])
 df = pd.concat([df, fuzzy_df], axis=1)
 
-def area_tr(mu, a, b, c=None):
-    if c is None:  
-        base = b - a
-        height = mu
-        return (1 / 2) * base * height
-    else: 
-        x1 = mu * (b - a) + a
-        x2 = c - mu * (c - b)
-        d1 = b - a
-        d2 = c - b
-        return (1 / 2) * mu * (d1 + d2)
+def area_tr(mu, a, b, c):
+    base = abs(c - a)
+    height = mu
+    area = (base * height) / 2
+    return area
 
 def defuzzification(vl_op, fd_op, basic_op, elem_op, inter_op):
     area_vl = area_pl = area_pm = area_ps = area_ns = 0
     c_vl = c_fd = c_basic = c_elem = c_inter = 0
 
     if vl_op != 0:
-        area_vl, c_vl = area_tr(vl_op, 0, 39), 0
+        area_vl= area_tr(vl_op, 0, 0, 39)
+        c_vl= 13
     if fd_op != 0:
-        area_pl, c_fd = area_tr(fd_op, 38, 45, 52), 45
+        area_pl= area_tr(fd_op, 38, 45, 52)
+        c_fd=45
     if basic_op != 0:
         area_pm = area_tr(basic_op, 49, 58, 66)
         c_basic = 58
@@ -141,8 +137,8 @@ def defuzzification(vl_op, fd_op, basic_op, elem_op, inter_op):
         area_ps = area_tr(elem_op, 64, 73, 81)
         c_elem = 73
     if inter_op != 0:
-        area_ns = area_tr(inter_op, 77, 100)
-        c_inter = 100
+        area_ns = area_tr(inter_op, 77, 100,100)
+        c_inter = 92.33
 
     numerator = area_vl * c_vl + area_pl * c_fd + area_pm * c_basic + area_ps * c_elem + area_ns * c_inter
     denominator = area_vl + area_pl + area_pm + area_ps + area_ns
@@ -207,8 +203,8 @@ plt.title('Students Percentage, Crisp Values, and Class')
 plt.tight_layout()
 plt.show()
 
-test_percentages = [16, 39, 60, 78, 97]
-expected_outputs = [0, 45, 58, 73, 100]  
+test_percentages = [16, 39, 60, 78, 79.8, 97]
+expected_outputs = [13, 45, 58, 73, 73, 92.33]  
 
 for test_percentage, expected in zip(test_percentages, expected_outputs):
     fuzzy_values = FuzzyVariable(percentage_mf.x, 'Percentage').get_fuzzy_var(test_percentage, percentage_mf)
